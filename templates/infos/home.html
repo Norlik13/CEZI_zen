@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Accueil - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Bienvenue sur CESIZen</h1>
+  </div>
+
+  <div class="card">
+    <h2 style="margin:0 0 10px; font-size:16px;">Information</h2>
+
+    {% if menus %}
+      {% for menu in menus %}
+        <div style="margin:14px 0 10px;">
+          <div style="font-weight:800; margin-bottom:6px;">{{ menu.titre }}</div>
+          <div class="row">
+            <div>
+              <ul style="margin:0; padding-left:18px;">
+                {% for e in menu.entrees.all %}
+                  <li style="margin:6px 0;">
+                    {% if e.page %}
+                      <a class="btn-link" href="{% url 'page_detail' e.page.slug %}">{{ e.libelle }}</a>
+                    {% else %}
+                      <a class="btn-link" href="{{ e.url_externe }}" target="_blank" rel="noopener">{{ e.libelle }}</a>
+                      <span class="subtitle" style="display:inline; margin-left:6px;">(lien externe)</span>
+                    {% endif %}
+                  </li>
+                {% empty %}
+                  <li class="subtitle">Aucune entrée.</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <p class="subtitle">Aucun article disponible.</p>
+    {% endif %}
+  </div>
+
+  <div style="height:12px;"></div>
+
+  <div class="card">
+    <h2 style="margin:0 0 10px; font-size:16px;">Tracker d’émotions</h2>
+
+    {% if user.is_authenticated %}
+      <a class="btn btn-primary" href="{% url 'tracker_add' %}">Ajouter une entrée</a>
+      <p class="hint">Tu peux ensuite consulter la liste et le rapport par période.</p>
+    {% else %}
+      <p class="subtitle">Pour utiliser le tracker, connectez-vous.</p>
+      <a class="btn btn-primary" href="{% url 'login' %}">Connexion</a>
+    {% endif %}
+  </div>
+{% endblock %}

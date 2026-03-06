@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Tracker - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Tracker d’émotions</h1>
+    <p class="subtitle">Consultez vos entrées et suivez votre évolution sur une période</p>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label>Période</label>
+        <form method="get">
+          <select name="period" onchange="this.form.submit()">
+            <option value="week" {% if period == "week" %}selected{% endif %}>Semaine</option>
+            <option value="month" {% if period == "month" %}selected{% endif %}>Mois</option>
+            <option value="quarter" {% if period == "quarter" %}selected{% endif %}>Trimestre</option>
+            <option value="year" {% if period == "year" %}selected{% endif %}>Année</option>
+          </select>
+        </form>
+      </div>
+      <div style="display:flex; align-items:end;">
+        <a class="btn btn-primary" href="{% url 'tracker_add' %}">Ajouter une entrée</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:12px;"></div>
+
+  {% if items %}
+    {% for item in items %}
+      <div class="card" style="margin-top:12px;">
+        <div style="font-weight:800;">
+          {{ item.emotion.base.libelle }} → {{ item.emotion.libelle }}
+        </div>
+        <div class="subtitle">{{ item.date_saisie|date:"d/m/Y H:i" }}</div>
+
+        {% if item.intensite %}
+          <div style="margin-top:8px;">Intensité : <strong>{{ item.intensite }}</strong></div>
+        {% endif %}
+        {% if item.commentaire %}
+          <div style="margin-top:8px;">{{ item.commentaire|linebreaks }}</div>
+        {% endif %}
+
+        <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+          <a class="btn btn-secondary btn-sm" href="{% url 'tracker_edit' item.id %}">Modifier</a>
+          <a class="btn btn-danger btn-sm" href="{% url 'tracker_delete' item.id %}">Supprimer</a>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="center">
+      <p class="subtitle">Aucune entrée sur la période sélectionnée.</p>
+      <a class="btn btn-primary" href="{% url 'tracker_add' %}">Ajouter ma première entrée</a>
+    </div>
+  {% endif %}
+
+  <div class="center">
+    <a class="backlink" href="{% url 'home' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

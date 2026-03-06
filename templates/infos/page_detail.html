@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ page.titre }} - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>{{ page.titre }}</h1>
+    <p class="subtitle">Information</p>
+  </div>
+
+  <div class="card">
+    {{ page.contenu|linebreaks }}
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'home' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

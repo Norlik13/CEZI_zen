@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}
+  {% if mode == "edit" %}Modifier une entrée{% else %}Ajouter une entrée{% endif %} - CESIZen
+{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>
+      {% if mode == "edit" %}Modifier une entrée{% else %}Ajouter une entrée{% endif %}
+    </h1>
+    <p class="subtitle">Choisissez une émotion et enregistrez votre ressenti</p>
+  </div>
+
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="error">{{ field.errors|striptags }}</div>
+        {% endif %}
+      {% endfor %}
+
+      <button class="btn btn-primary" type="submit">
+        {% if mode == "edit" %}Enregistrer les modifications{% else %}Enregistrer{% endif %}
+      </button>
+    </form>
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'tracker_list' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

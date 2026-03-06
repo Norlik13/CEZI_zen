@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Créer un compte - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Créer un compte</h1>
+    <p class="subtitle">Créez un compte pour sauvegarder vos données et améliorer votre expérience</p>
+  </div>
+
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+
+      {# Le form.as_p marche, mais on garde un rendu proche mockup #}
+      {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}
+          <div class="error">{{ field.errors|striptags }}</div>
+        {% endif %}
+      {% endfor %}
+
+      <button class="btn btn-primary" type="submit">Créer mon compte</button>
+    </form>
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'login' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

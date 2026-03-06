@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Supprimer N1 - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Supprimer “{{ base.libelle }}” ?</h1>
+    <p class="subtitle">Attention : si des émotions N2 dépendent de cette base, cela peut être bloqué.</p>
+  </div>
+
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn btn-danger" type="submit">Oui, supprimer</button>
+      <a class="btn btn-secondary btn-sm" href="{% url 'base_list' %}" style="margin-left:10px;">Annuler</a>
+    </form>
+  </div>
+{% endblock %}

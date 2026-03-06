@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}{% if mode == "edit" %}Modifier{% else %}Ajouter{% endif %} Page - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>{% if mode == "edit" %}Modifier{% else %}Ajouter{% endif %} une page</h1>
+    <p class="subtitle">Titre, slug, contenu et statut (brouillon/publié)</p>
+  </div>
+
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="error">{{ field.errors|striptags }}</div>{% endif %}
+      {% endfor %}
+
+      <button class="btn btn-primary" type="submit">
+        {% if mode == "edit" %}Enregistrer{% else %}Créer{% endif %}
+      </button>
+    </form>
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'page_admin_list' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

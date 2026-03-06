@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Gestion Pages - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Gestion des pages d’information</h1>
+    <p class="subtitle">CRUD des pages (hors /admin/), réservé admin</p>
+  </div>
+
+  <div class="card">
+    <a class="btn btn-primary" href="{% url 'page_admin_add' %}">Ajouter une page</a>
+  </div>
+
+  <div style="height:12px;"></div>
+
+  <div class="card">
+    {% if pages %}
+      <table>
+        <thead>
+          <tr>
+            <th>Titre</th>
+            <th>Slug</th>
+            <th>Statut</th>
+            <th>MAJ</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for p in pages %}
+            <tr>
+              <td>{{ p.titre }}</td>
+              <td>{{ p.slug }}</td>
+              <td>{{ p.get_statut_display }}</td>
+              <td>{{ p.date_mise_a_jour|date:"d/m/Y H:i" }}</td>
+              <td style="display:flex;gap:8px;flex-wrap:wrap;">
+                <a class="btn btn-secondary btn-sm" href="{% url 'page_admin_edit' p.id %}">Modifier</a>
+                <a class="btn btn-danger btn-sm" href="{% url 'page_admin_delete' p.id %}">Supprimer</a>
+                {% if p.statut == "publie" %}
+                  <a class="btn btn-secondary btn-sm" href="{% url 'page_detail' p.slug %}">Voir</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="subtitle">Aucune page créée.</p>
+    {% endif %}
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'home' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

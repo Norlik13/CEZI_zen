@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Référentiel N2 - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Référentiel - Émotions (N2)</h1>
+    <p class="subtitle">Gestion des émotions rattachées à une base (N1)</p>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label>Filtrer par base</label>
+        <form method="get">
+          <select name="base" onchange="this.form.submit()">
+            <option value="">Toutes</option>
+            {% for b in bases %}
+              <option value="{{ b.id }}" {% if base_id == b.id|stringformat:"s" %}selected{% endif %}>
+                {{ b.libelle }}
+              </option>
+            {% endfor %}
+          </select>
+        </form>
+      </div>
+      <div style="display:flex;align-items:end;">
+        <a class="btn btn-primary" href="{% url 'emotion_add' %}">Ajouter une émotion (N2)</a>
+      </div>
+    </div>
+
+    <div style="margin-top:10px;">
+      <a class="btn btn-secondary btn-sm" href="{% url 'base_list' %}">Gérer les bases (N1)</a>
+    </div>
+  </div>
+
+  <div style="height:12px;"></div>
+
+  <div class="card">
+    {% if emotions %}
+      <table>
+        <thead>
+          <tr>
+            <th>N1</th>
+            <th>N2</th>
+            <th>Actif</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in emotions %}
+            <tr>
+              <td>{{ e.base.libelle }}</td>
+              <td>{{ e.libelle }}</td>
+              <td>{{ e.actif|yesno:"Oui,Non" }}</td>
+              <td style="display:flex;gap:8px;flex-wrap:wrap;">
+                <a class="btn btn-secondary btn-sm" href="{% url 'emotion_edit' e.id %}">Modifier</a>
+                <a class="btn btn-danger btn-sm" href="{% url 'emotion_delete' e.id %}">Supprimer</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="subtitle">Aucune émotion N2.</p>
+    {% endif %}
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'tracker_list' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

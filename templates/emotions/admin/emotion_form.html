@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}N2 - {% if mode == "edit" %}Modifier{% else %}Ajouter{% endif %} - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>{% if mode == "edit" %}Modifier{% else %}Ajouter{% endif %} une émotion (N2)</h1>
+    <p class="subtitle">Choisir la base (N1) + libellé + actif/inactif</p>
+  </div>
+
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div class="error">{{ field.errors|striptags }}</div>{% endif %}
+      {% endfor %}
+      <button class="btn btn-primary" type="submit">
+        {% if mode == "edit" %}Enregistrer{% else %}Ajouter{% endif %}
+      </button>
+    </form>
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'emotion_list' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

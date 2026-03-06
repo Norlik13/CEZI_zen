@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Mon compte - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Mon compte</h1>
+    <p class="subtitle">Informations et consentement RGPD</p>
+  </div>
+
+  <div class="card">
+    <div><strong>Utilisateur :</strong> {{ user.username }}</div>
+    <div><strong>Email :</strong> {{ user.email }}</div>
+    <div><strong>Date de création :</strong> {{ user.date_joined|date:"d/m/Y H:i" }}</div>
+    <div><strong>Dernière connexion :</strong>
+      {% if user.last_login %}{{ user.last_login|date:"d/m/Y H:i" }}{% else %}-{% endif %}
+    </div>
+
+    <hr style="border:none;border-top:1px solid var(--border);margin:14px 0;">
+
+    <div><strong>RGPD accepté :</strong> {{ user.rgpd_accepte|yesno:"Oui,Non" }}</div>
+    <div><strong>Date d’acceptation :</strong>
+      {% if user.rgpd_date_acceptation %}{{ user.rgpd_date_acceptation|date:"d/m/Y H:i" }}{% else %}-{% endif %}
+    </div>
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'home' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Supprimer N2 - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Supprimer “{{ emo.base.libelle }} → {{ emo.libelle }}” ?</h1>
+    <p class="subtitle">Attention : si cette émotion est utilisée par des entrées du tracker, la suppression peut être bloquée.</p>
+  </div>
+
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      <button class="btn btn-danger" type="submit">Oui, supprimer</button>
+      <a class="btn btn-secondary btn-sm" href="{% url 'emotion_list' %}" style="margin-left:10px;">Annuler</a>
+    </form>
+  </div>
+{% endblock %}

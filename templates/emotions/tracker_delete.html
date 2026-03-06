@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Supprimer - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Supprimer cette entrée ?</h1>
+    <p class="subtitle">Cette action est définitive.</p>
+  </div>
+
+  <div class="card">
+    <div style="font-weight:800;">
+      {{ item.emotion.base.libelle }} → {{ item.emotion.libelle }}
+    </div>
+    <div class="subtitle">{{ item.date_saisie|date:"d/m/Y H:i" }}</div>
+
+    {% if item.intensite %}
+      <div style="margin-top:8px;">Intensité : <strong>{{ item.intensite }}</strong></div>
+    {% endif %}
+    {% if item.commentaire %}
+      <div style="margin-top:8px;">{{ item.commentaire|linebreaks }}</div>
+    {% endif %}
+
+    <form method="post" style="margin-top:14px;">
+      {% csrf_token %}
+      <button class="btn btn-danger" type="submit">Oui, supprimer</button>
+      <a class="btn btn-secondary btn-sm" href="{% url 'tracker_list' %}" style="margin-left:10px;">Annuler</a>
+    </form>
+  </div>
+{% endblock %}

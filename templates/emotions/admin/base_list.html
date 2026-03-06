@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Référentiel N1 - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Référentiel - Émotions de base (N1)</h1>
+    <p class="subtitle">Gestion du référentiel (réservé admin)</p>
+  </div>
+
+  <div class="card">
+    <a class="btn btn-primary" href="{% url 'base_add' %}">Ajouter une émotion de base</a>
+    <a class="btn btn-secondary btn-sm" style="margin-top:10px;" href="{% url 'emotion_list' %}">Gérer les émotions (N2)</a>
+  </div>
+
+  <div style="height:12px;"></div>
+
+  <div class="card">
+    {% if bases %}
+      <table>
+        <thead>
+          <tr>
+            <th>Libellé</th>
+            <th>Actif</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bases %}
+            <tr>
+              <td>{{ b.libelle }}</td>
+              <td>{{ b.actif|yesno:"Oui,Non" }}</td>
+              <td style="display:flex;gap:8px;flex-wrap:wrap;">
+                <a class="btn btn-secondary btn-sm" href="{% url 'base_edit' b.id %}">Modifier</a>
+                <a class="btn btn-danger btn-sm" href="{% url 'base_delete' b.id %}">Supprimer</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="subtitle">Aucune émotion de base.</p>
+    {% endif %}
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'tracker_list' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}

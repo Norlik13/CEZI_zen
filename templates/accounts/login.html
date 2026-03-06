@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Connexion - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Connexion</h1>
+    <p class="subtitle">Connectez-vous pour accéder au tracker et à votre compte</p>
+  </div>
+
+  {% if form.errors %}
+    <div class="error">Identifiants incorrects.</div>
+  {% endif %}
+
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+
+      {% for field in form %}
+        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+      {% endfor %}
+
+      <button class="btn btn-primary" type="submit">Se connecter</button>
+    </form>
+  </div>
+
+  <p class="hint center">
+    Pas de compte ? <a class="btn-link" href="{% url 'signup' %}">Créer un compte</a>
+  </p>
+{% endblock %}

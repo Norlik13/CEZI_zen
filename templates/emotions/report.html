@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Rapport - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Rapport</h1>
+    <p class="subtitle">Répartition des émotions sur une période</p>
+  </div>
+
+  <div class="card">
+    <form method="get">
+      <label>Période</label>
+      <select name="period" onchange="this.form.submit()">
+  <option value="week" {% if period == "week" %}selected{% endif %}>Semaine</option>
+  <option value="month" {% if period == "month" %}selected{% endif %}>Mois</option>
+  <option value="quarter" {% if period == "quarter" %}selected{% endif %}>Trimestre</option>
+  <option value="year" {% if period == "year" %}selected{% endif %}>Année</option>
+</select>
+    </form>
+
+    <a class="btn btn-primary" href="{% url 'tracker_add' %}">Ajouter une entrée</a>
+  </div>
+
+  <div style="height:12px;"></div>
+
+  <div class="card">
+    <h2 style="margin:0 0 10px; font-size:16px;">Par émotion de base (N1)</h2>
+    {% if by_base %}
+      <table>
+        <thead>
+          <tr>
+            <th>Émotion de base</th>
+            <th>Nombre</th>
+            <th>Intensité moyenne</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in by_base %}
+            <tr>
+              <td>{{ row.emotion__base__libelle }}</td>
+              <td>{{ row.nb }}</td>
+              <td>
+                {% if row.avg_int %}
+                  {{ row.avg_int|floatformat:1 }}
+                {% else %}-{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="subtitle">Pas de données sur la période.</p>
+    {% endif %}
+  </div>
+
+  <div style="height:12px;"></div>
+
+  <div class="card">
+    <h2 style="margin:0 0 10px; font-size:16px;">Détail par émotion (N2)</h2>
+    {% if by_emotion %}
+      <table>
+        <thead>
+          <tr>
+            <th>N1</th>
+            <th>N2</th>
+            <th>Nombre</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in by_emotion %}
+            <tr>
+              <td>{{ row.emotion__base__libelle }}</td>
+              <td>{{ row.emotion__libelle }}</td>
+              <td>{{ row.nb }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p class="subtitle">Pas de données sur la période.</p>
+    {% endif %}
+  </div>
+
+  <div class="center">
+    <a class="backlink" href="{% url 'home' %}">&laquo; Retour</a>
+  </div>
+{% endblock %}
