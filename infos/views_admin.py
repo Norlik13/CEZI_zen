@@ -25,7 +25,7 @@ def page_create(request):
             page.save()
             return redirect("page_admin_list")
     else:
-        form = PageInformationForm()
+        form = PageInformationForm(initial={"statut": "publie"})
 
     return render(request, "infos/admin/page_form.html", {"form": form, "mode": "create"})
 

@@ -23,3 +23,9 @@ class SignUpForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+
+class UserAdminForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ("username", "email", "is_active", "is_staff")

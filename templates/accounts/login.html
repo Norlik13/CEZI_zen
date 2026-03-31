@@ -4,7 +4,7 @@
 {% block content %}
   <div class="center">
     <h1>Connexion</h1>
-    <p class="subtitle">Connectez-vous pour accéder au tracker et à votre compte</p>
+    <p class="subtitle">Connectez-vous pour acceder au tracker et a votre compte</p>
   </div>
 
   {% if form.errors %}
@@ -25,6 +25,9 @@
   </div>
 
   <p class="hint center">
-    Pas de compte ? <a class="btn-link" href="{% url 'signup' %}">Créer un compte</a>
+    <a class="btn-link" href="{% url 'password_reset' %}">Mot de passe oublie ?</a>
+  </p>
+  <p class="hint center">
+    Pas de compte ? <a class="btn-link" href="{% url 'signup' %}">Creer un compte</a>
   </p>
 {% endblock %}

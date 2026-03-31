@@ -69,6 +69,64 @@
     nav a:hover{
       background:rgba(255,255,255,.55);
     }
+    .admin-menu{
+      position:relative;
+    }
+    .admin-menu summary{
+      list-style:none;
+      color:var(--text);
+      font-weight:600;
+      font-size:14px;
+      padding:8px 10px;
+      border-radius:8px;
+      cursor:pointer;
+      user-select:none;
+      background:transparent;
+    }
+    .admin-menu summary:hover{
+      background:rgba(255,255,255,.55);
+    }
+    .admin-menu summary::-webkit-details-marker{
+      display:none;
+    }
+    .admin-menu[open] summary{
+      background:rgba(255,255,255,.75);
+    }
+    .admin-menu-items{
+      position:absolute;
+      right:0;
+      top:calc(100% + 6px);
+      min-width:180px;
+      background:#fff;
+      border:1px solid var(--border);
+      border-radius:10px;
+      box-shadow:var(--shadow);
+      padding:6px;
+      z-index:40;
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+    }
+    .admin-menu-items a{
+      display:block;
+    }
+    .nav-logout-form{
+      display:inline;
+    }
+    .nav-logout-btn{
+      color:var(--text);
+      text-decoration:none;
+      font-weight:600;
+      font-size:14px;
+      padding:8px 10px;
+      border-radius:8px;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+    }
+    .nav-logout-btn:hover{
+      background:rgba(255,255,255,.55);
+    }
 
     /* Main */
     main{
@@ -240,6 +298,10 @@
       .header-inner{ align-items:flex-start; flex-direction:column; }
       nav{ justify-content:flex-start; }
       .page-frame{ padding:20px 12px 16px; }
+      .admin-menu-items{
+        position:static;
+        margin-top:6px;
+      }
     }
   </style>
 </head>
@@ -250,16 +312,19 @@
       <div class="brand">CESIZen</div>
       <nav>
         <a href="{% url 'home' %}">Accueil</a>
-        <a href="{% url 'home' %}">Information</a>
+        <a href="{% url 'home' %}">Articles</a>
         <a href="{% url 'tracker_list' %}">Tracker</a>
       
         {% if user.is_authenticated %}
-          {% if user.is_staff or user.groups.all|length %}
-            {# simple : si tu utilises is_staff, garde juste user.is_staff #}
-            {% if user.is_staff %}
+          {% if is_admin_user %}
+            <details class="admin-menu">
+              <summary>Administration</summary>
+              <div class="admin-menu-items">
                 <a href="{% url 'base_list' %}">Référentiel</a>
                 <a href="{% url 'page_admin_list' %}">Gestion pages</a>
-            {% endif %}
+                <a href="{% url 'user_admin_list' %}">Utilisateurs</a>
+              </div>
+            </details>
           {% endif %}
             <a href="{% url 'profile' %}">Mon compte</a>
             <form class="nav-logout-form" method="post" action="{% url 'logout' %}">

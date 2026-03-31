@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Administration utilisateurs - CESIZen{% endblock %}
+
+{% block content %}
+  <div class="center">
+    <h1>Administration des utilisateurs</h1>
+    <p class="subtitle">Gerez les comptes, statuts et droits admin</p>
+  </div>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="hint center">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="card" style="max-width:100%; overflow:auto;">
+    <form method="get" style="margin-bottom:12px; display:flex; gap:8px;">
+      <input type="text" name="q" value="{{ query }}" placeholder="Rechercher username ou email">
+      <button type="submit" class="btn btn-sm btn-secondary">Rechercher</button>
+    </form>
+
+    <table style="width:100%; border-collapse:collapse; font-size:14px;">
+      <thead>
+        <tr>
+          <th style="text-align:left; border-bottom:1px solid var(--border); padding:8px;">Username</th>
+          <th style="text-align:left; border-bottom:1px solid var(--border); padding:8px;">Email</th>
+          <th style="text-align:left; border-bottom:1px solid var(--border); padding:8px;">Actif</th>
+          <th style="text-align:left; border-bottom:1px solid var(--border); padding:8px;">Admin</th>
+          <th style="text-align:left; border-bottom:1px solid var(--border); padding:8px;">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for u in users %}
+          <tr>
+            <td style="border-bottom:1px solid var(--border); padding:8px;">{{ u.username }}</td>
+            <td style="border-bottom:1px solid var(--border); padding:8px;">{{ u.email|default:"-" }}</td>
+            <td style="border-bottom:1px solid var(--border); padding:8px;">{{ u.is_active|yesno:"Oui,Non" }}</td>
+            <td style="border-bottom:1px solid var(--border); padding:8px;">{{ u.is_staff|yesno:"Oui,Non" }}</td>
+            <td style="border-bottom:1px solid var(--border); padding:8px;">
+              <a class="btn btn-sm btn-secondary" href="{% url 'user_admin_edit' u.pk %}">Modifier</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="5" style="padding:12px;">Aucun utilisateur trouve.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

@@ -7,7 +7,7 @@
   </div>
 
   <div class="card">
-    <h2 style="margin:0 0 10px; font-size:16px;">Information</h2>
+    <h2 style="margin:0 0 10px; font-size:16px;">Articles</h2>
 
     {% if menus %}
       {% for menu in menus %}
@@ -33,8 +33,29 @@
           </div>
         </div>
       {% endfor %}
+    {% elif standalone_pages %}
+      <ul style="margin:0; padding-left:18px;">
+        {% for p in standalone_pages %}
+          <li style="margin:6px 0;">
+            <a class="btn-link" href="{% url 'page_detail' p.slug %}">{{ p.titre }}</a>
+          </li>
+        {% endfor %}
+      </ul>
     {% else %}
       <p class="subtitle">Aucun article disponible.</p>
+    {% endif %}
+
+    {% if menus and standalone_pages %}
+      <div style="margin-top:16px;">
+        <div style="font-weight:800; margin-bottom:6px;">Articles recents</div>
+        <ul style="margin:0; padding-left:18px;">
+          {% for p in standalone_pages %}
+            <li style="margin:6px 0;">
+              <a class="btn-link" href="{% url 'page_detail' p.slug %}">{{ p.titre }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
     {% endif %}
   </div>
 
