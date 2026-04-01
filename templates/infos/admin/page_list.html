@@ -2,9 +2,53 @@
 {% block title %}Gestion Pages - CESIZen{% endblock %}
 
 {% block content %}
+  <style>
+    .row-actions {
+      position: relative;
+      display: inline-block;
+    }
+    .row-actions summary {
+      list-style: none;
+      cursor: pointer;
+    }
+    .row-actions summary::-webkit-details-marker {
+      display: none;
+    }
+    .row-actions-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      min-width: 150px;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 30;
+    }
+    .row-actions-menu a {
+      display: block;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .row-actions-menu a:hover {
+      background: rgba(30, 136, 229, 0.1);
+    }
+    .row-actions-menu a.action-danger {
+      color: #b42318;
+    }
+  </style>
+
   <div class="center">
-    <h1>Gestion des pages d’information</h1>
-    <p class="subtitle">CRUD des pages (hors /admin/), réservé admin</p>
+    <h1>Gestion des pages d'information</h1>
+    <p class="subtitle">CRUD des pages (hors /admin/), reserve admin</p>
   </div>
 
   <div class="card">
@@ -19,7 +63,6 @@
         <thead>
           <tr>
             <th>Titre</th>
-            <th>Slug</th>
             <th>Statut</th>
             <th>MAJ</th>
             <th>Actions</th>
@@ -29,22 +72,26 @@
           {% for p in pages %}
             <tr>
               <td>{{ p.titre }}</td>
-              <td>{{ p.slug }}</td>
               <td>{{ p.get_statut_display }}</td>
               <td>{{ p.date_mise_a_jour|date:"d/m/Y H:i" }}</td>
-              <td style="display:flex;gap:8px;flex-wrap:wrap;">
-                <a class="btn btn-secondary btn-sm" href="{% url 'page_admin_edit' p.id %}">Modifier</a>
-                <a class="btn btn-danger btn-sm" href="{% url 'page_admin_delete' p.id %}">Supprimer</a>
-                {% if p.statut == "publie" %}
-                  <a class="btn btn-secondary btn-sm" href="{% url 'page_detail' p.slug %}">Voir</a>
-                {% endif %}
+              <td>
+                <details class="row-actions">
+                  <summary class="btn btn-secondary btn-sm">Actions</summary>
+                  <div class="row-actions-menu">
+                    <a href="{% url 'page_admin_edit' p.id %}">Modifier</a>
+                    <a class="action-danger" href="{% url 'page_admin_delete' p.id %}">Supprimer</a>
+                    {% if p.statut == "publie" %}
+                      <a href="{% url 'page_detail' p.slug %}">Voir</a>
+                    {% endif %}
+                  </div>
+                </details>
               </td>
             </tr>
           {% endfor %}
         </tbody>
       </table>
     {% else %}
-      <p class="subtitle">Aucune page créée.</p>
+      <p class="subtitle">Aucune page creee.</p>
     {% endif %}
   </div>
 

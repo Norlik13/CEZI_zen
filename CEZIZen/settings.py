@@ -26,7 +26,15 @@ SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "dev-only-change-me-before-prod
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'CEZIZen',
+    'infos',
+    "accounts",
+    "emotions",
+]
 
 
 # Application definition
