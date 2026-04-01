@@ -12,6 +12,7 @@ class TrackerItemForm(forms.ModelForm):
         self.fields["emotion"].queryset = Emotion.objects.filter(
             actif=True, base__actif=True
         ).select_related("base").order_by("base__libelle", "libelle")
+        self.fields["intensite"].widget.attrs.update({"min": 0, "max": 10, "step": 1})
 
 
 class EmotionBaseForm(forms.ModelForm):

@@ -4,6 +4,7 @@ from . import views_admin
 
 urlpatterns = [
     path("", views.home, name="home"),
+    path("articles/", views.articles, name="articles"),
 
     # UI admin hors /admin/
     path("gestion/pages/", views_admin.page_list, name="page_admin_list"),

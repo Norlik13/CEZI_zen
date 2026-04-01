@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 class EmotionBase(models.Model):
@@ -25,7 +26,11 @@ class TrackerItem(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="tracker_items")
     emotion = models.ForeignKey(Emotion, on_delete=models.PROTECT)
     date_saisie = models.DateTimeField(auto_now_add=True)
-    intensite = models.PositiveSmallIntegerField(null=True, blank=True)
+    intensite = models.PositiveSmallIntegerField(
+        null=True,
+        blank=True,
+        validators=[MinValueValidator(0), MaxValueValidator(10)],
+    )
     commentaire = models.TextField(blank=True)
 
     def __str__(self):

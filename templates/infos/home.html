@@ -1,75 +1,94 @@
 {% extends "base.html" %}
-{% block title %}Accueil - CESIZen{% endblock %}
+{% block title %}{{ page_heading|default:"Accueil" }} - CESIZen{% endblock %}
 
 {% block content %}
+  <style>
+    .article-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 8px;
+    }
+    .article-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      min-height: 170px;
+    }
+    .article-card h3 {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.3;
+    }
+    .article-preview {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+      margin: 0;
+      flex: 1;
+    }
+    .article-action {
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      color: var(--primary);
+    }
+    .article-label {
+      font-size: 12px;
+      color: var(--muted);
+      background: #f6f8fa;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 2px 8px;
+      width: fit-content;
+    }
+  </style>
+
   <div class="center">
-    <h1>Bienvenue sur CESIZen</h1>
+    <h1>{{ page_heading|default:"Bienvenue sur CESIZen" }}</h1>
   </div>
 
   <div class="card">
     <h2 style="margin:0 0 10px; font-size:16px;">Articles</h2>
 
-    {% if menus %}
-      {% for menu in menus %}
-        <div style="margin:14px 0 10px;">
-          <div style="font-weight:800; margin-bottom:6px;">{{ menu.titre }}</div>
-          <div class="row">
-            <div>
-              <ul style="margin:0; padding-left:18px;">
-                {% for e in menu.entrees.all %}
-                  <li style="margin:6px 0;">
-                    {% if e.page %}
-                      <a class="btn-link" href="{% url 'page_detail' e.page.slug %}">{{ e.libelle }}</a>
-                    {% else %}
-                      <a class="btn-link" href="{{ e.url_externe }}" target="_blank" rel="noopener">{{ e.libelle }}</a>
-                      <span class="subtitle" style="display:inline; margin-left:6px;">(lien externe)</span>
-                    {% endif %}
-                  </li>
-                {% empty %}
-                  <li class="subtitle">Aucune entrée.</li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-        </div>
-      {% endfor %}
-    {% elif standalone_pages %}
-      <ul style="margin:0; padding-left:18px;">
-        {% for p in standalone_pages %}
-          <li style="margin:6px 0;">
-            <a class="btn-link" href="{% url 'page_detail' p.slug %}">{{ p.titre }}</a>
-          </li>
+    {% if latest_articles %}
+      <div class="article-grid">
+        {% for p in latest_articles %}
+          <article class="article-card">
+            <h3>{{ p.titre }}</h3>
+            <p class="article-preview">{{ p.contenu|striptags|truncatechars:150 }}</p>
+            <a class="article-action" href="{% url 'page_detail' p.slug %}">Lire l'article</a>
+          </article>
         {% endfor %}
-      </ul>
+      </div>
+      {% if show_tracker %}
+        <div class="center" style="margin-top:12px;">
+          <a class="btn btn-secondary btn-sm" href="{% url 'articles' %}">Voir plus</a>
+        </div>
+      {% endif %}
     {% else %}
       <p class="subtitle">Aucun article disponible.</p>
     {% endif %}
-
-    {% if menus and standalone_pages %}
-      <div style="margin-top:16px;">
-        <div style="font-weight:800; margin-bottom:6px;">Articles recents</div>
-        <ul style="margin:0; padding-left:18px;">
-          {% for p in standalone_pages %}
-            <li style="margin:6px 0;">
-              <a class="btn-link" href="{% url 'page_detail' p.slug %}">{{ p.titre }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
-    {% endif %}
   </div>
 
-  <div style="height:12px;"></div>
+  {% if show_tracker %}
+    <div style="height:12px;"></div>
 
-  <div class="card">
-    <h2 style="margin:0 0 10px; font-size:16px;">Tracker d’émotions</h2>
+    <div class="card">
+      <h2 style="margin:0 0 10px; font-size:16px;">Tracker d'emotions</h2>
 
-    {% if user.is_authenticated %}
-      <a class="btn btn-primary" href="{% url 'tracker_add' %}">Ajouter une entrée</a>
-      <p class="hint">Tu peux ensuite consulter la liste et le rapport par période.</p>
-    {% else %}
-      <p class="subtitle">Pour utiliser le tracker, connectez-vous.</p>
-      <a class="btn btn-primary" href="{% url 'login' %}">Connexion</a>
-    {% endif %}
-  </div>
+      {% if user.is_authenticated %}
+        <a class="btn btn-primary" href="{% url 'tracker_add' %}">Ajouter une entree</a>
+        <p class="hint">Tu peux ensuite consulter la liste et le rapport par periode.</p>
+      {% else %}
+        <p class="subtitle">Pour utiliser le tracker, connectez-vous.</p>
+        <a class="btn btn-primary" href="{% url 'login' %}">Connexion</a>
+      {% endif %}
+    </div>
+  {% endif %}
 {% endblock %}
