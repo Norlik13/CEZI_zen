@@ -11,6 +11,7 @@ from .forms import TrackerItemForm
 def _period_start(period: str):
     """
     Retourne (period_norm, start_datetime) pour filtrer.
+    start_datetime peut etre None pour "tout" (aucun filtre de date).
     Compatible avec anciens codes: 7d/30d/365d.
     """
     now = timezone.localtime(timezone.now())
@@ -25,6 +26,8 @@ def _period_start(period: str):
         period = "year"
     if period == "90d":
         period = "quarter"
+    if period in ("all", "tout"):
+        period = "all"
 
     if period == "week":
         # début de semaine (lundi 00:00)
@@ -49,6 +52,9 @@ def _period_start(period: str):
         start = timezone.make_aware(start_naive, tz)
         return "year", start
 
+    if period == "all":
+        return "all", None
+
     # fallback “mois”
     start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     return "month", start
@@ -59,12 +65,10 @@ def tracker_list(request):
     period_raw = request.GET.get("period", "month")
     period, start = _period_start(period_raw)
 
-    items = (
-        TrackerItem.objects
-        .filter(user=request.user, date_saisie__gte=start)
-        .select_related("emotion__base")
-        .order_by("-date_saisie")
-    )
+    items = TrackerItem.objects.filter(user=request.user)
+    if start is not None:
+        items = items.filter(date_saisie__gte=start)
+    items = items.select_related("emotion__base").order_by("-date_saisie")
     return render(request, "emotions/tracker_list.html", {"items": items, "period": period})
 
 
@@ -121,11 +125,10 @@ def tracker_report(request):
     period_raw = request.GET.get("period", "month")
     period, start = _period_start(period_raw)
 
-    qs = (
-        TrackerItem.objects
-        .filter(user=request.user, date_saisie__gte=start)
-        .select_related("emotion__base")
-    )
+    qs = TrackerItem.objects.filter(user=request.user)
+    if start is not None:
+        qs = qs.filter(date_saisie__gte=start)
+    qs = qs.select_related("emotion__base")
 
     by_base = qs.values("emotion__base__libelle").annotate(
         nb=Count("id"),
