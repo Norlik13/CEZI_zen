@@ -7,16 +7,17 @@
 
   <style>
     :root{
-      --header-bg:#d9edf9;      /* bleu clair “institutionnel apaisant” */
-      --footer-bg:#cfcfe0;      /* gris/violet clair comme le mockup */
-      --primary:#1e88e5;        /* bouton bleu */
+      --header-bg:#d9edf9;
+      --footer-bg:#c8c8db;
+      --footer-border:#1e88e5;
+      --primary:#1e88e5;
       --primary-dark:#176fbe;
       --text:#1b1f23;
       --muted:#667085;
       --border:#d7dde3;
       --card:#ffffff;
-      --page-bg:#ffffff;
-      --shadow: 0 2px 10px rgba(0,0,0,.06);
+      --page-bg:#f4f6f8;
+      --shadow: 0 2px 12px rgba(0,0,0,.08);
       --radius: 10px;
       --maxw: 820px;
     }
@@ -24,7 +25,7 @@
     *{ box-sizing:border-box; }
     body{
       margin:0;
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
       color:var(--text);
       background:var(--page-bg);
       min-height:100vh;
@@ -32,7 +33,7 @@
       flex-direction:column;
     }
 
-    /* Header façon mockup */
+    /* ── Header ── */
     header{
       background:var(--header-bg);
       border-bottom:1px solid #b9d5ea;
@@ -40,21 +41,39 @@
     .header-inner{
       max-width:var(--maxw);
       margin:0 auto;
-      padding:14px 16px;
+      padding:12px 16px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
     }
+
+    /* Logo */
     .brand{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color:var(--text);
       font-weight:700;
+      font-size:18px;
       letter-spacing:.2px;
+      flex-shrink:0;
+    }
+    .brand-icon{
+      width:30px;
+      height:30px;
+      flex-shrink:0;
+    }
+    .brand-zen{
+      color:var(--primary);
     }
 
+    /* Nav */
     nav{
       display:flex;
       align-items:center;
-      gap:14px;
+      gap:4px;
       flex-wrap:wrap;
       justify-content:flex-end;
     }
@@ -63,12 +82,30 @@
       text-decoration:none;
       font-weight:600;
       font-size:14px;
-      padding:8px 10px;
+      padding:7px 10px;
       border-radius:8px;
+      transition: background .15s;
+      position:relative;
     }
     nav a:hover{
-      background:rgba(255,255,255,.55);
+      background:rgba(255,255,255,.60);
     }
+    nav a.nav-active{
+      color:var(--primary);
+      background:rgba(30,136,229,.10);
+    }
+    nav a.nav-active::after{
+      content:'';
+      position:absolute;
+      bottom:2px;
+      left:10px;
+      right:10px;
+      height:2px;
+      background:var(--primary);
+      border-radius:2px;
+    }
+
+    /* Admin dropdown */
     .admin-menu{
       position:relative;
     }
@@ -77,14 +114,27 @@
       color:var(--text);
       font-weight:600;
       font-size:14px;
-      padding:8px 10px;
+      padding:7px 10px;
       border-radius:8px;
       cursor:pointer;
       user-select:none;
       background:transparent;
+      transition: background .15s;
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+    .admin-menu summary::after{
+      content:'▾';
+      font-size:11px;
+      color:var(--muted);
+      transition: transform .15s;
+    }
+    .admin-menu[open] summary::after{
+      transform: rotate(180deg);
     }
     .admin-menu summary:hover{
-      background:rgba(255,255,255,.55);
+      background:rgba(255,255,255,.60);
     }
     .admin-menu summary::-webkit-details-marker{
       display:none;
@@ -100,7 +150,7 @@
       background:#fff;
       border:1px solid var(--border);
       border-radius:10px;
-      box-shadow:var(--shadow);
+      box-shadow:0 4px 16px rgba(0,0,0,.10);
       padding:6px;
       z-index:40;
       display:flex;
@@ -110,25 +160,26 @@
     .admin-menu-items a{
       display:block;
     }
-    .nav-logout-form{
-      display:inline;
-    }
+
+    /* Logout button styled as nav link */
+    .nav-logout-form{ display:inline; }
     .nav-logout-btn{
       color:var(--text);
       text-decoration:none;
       font-weight:600;
       font-size:14px;
-      padding:8px 10px;
+      padding:7px 10px;
       border-radius:8px;
       border:none;
       background:transparent;
       cursor:pointer;
+      transition: background .15s;
     }
     .nav-logout-btn:hover{
-      background:rgba(255,255,255,.55);
+      background:rgba(255,255,255,.60);
     }
 
-    /* Main */
+    /* ── Main ── */
     main{
       flex:1;
       max-width:var(--maxw);
@@ -137,26 +188,18 @@
       padding:22px 16px 30px;
     }
 
-    /* “Cadre” central comme sur les mockups */
     .page-frame{
-      border:1px solid #8f99a3;
       background:#fff;
       min-height:520px;
-      padding:26px 16px 18px;
+      padding:26px 20px 20px;
+      border-radius:12px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--border);
     }
 
-    .center{
-      text-align:center;
-    }
-    h1{
-      margin:0 0 8px;
-      font-size:22px;
-    }
-    .subtitle{
-      margin:0 0 18px;
-      color:var(--muted);
-      font-size:13px;
-    }
+    .center{ text-align:center; }
+    h1{ margin:0 0 8px; font-size:22px; }
+    .subtitle{ margin:0 0 18px; color:var(--muted); font-size:13px; }
 
     .card{
       max-width:520px;
@@ -168,14 +211,9 @@
       box-shadow:var(--shadow);
     }
 
-    /* Form styles (inputs “plats”, larges) */
+    /* Forms */
     form{ margin:0; }
-    label{
-      display:block;
-      font-weight:700;
-      margin:10px 0 6px;
-      font-size:13px;
-    }
+    label{ display:block; font-weight:700; margin:10px 0 6px; font-size:13px; }
     input, select, textarea{
       width:100%;
       padding:10px 12px;
@@ -184,6 +222,7 @@
       outline:none;
       font-size:14px;
       background:#fff;
+      transition: border-color .15s, box-shadow .15s;
     }
     textarea{ min-height:90px; resize:vertical; }
     input:focus, select:focus, textarea:focus{
@@ -191,13 +230,9 @@
       box-shadow:0 0 0 3px rgba(30,136,229,.15);
     }
 
-    .row{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:12px;
-    }
+    .row{ display:grid; grid-template-columns:1fr; gap:12px; }
 
-    /* Bouton large type mockup */
+    /* Buttons */
     .btn{
       display:inline-block;
       border:none;
@@ -208,7 +243,9 @@
       text-decoration:none;
       text-align:center;
       font-size:14px;
+      transition: background .15s, transform .1s;
     }
+    .btn:active{ transform: scale(.98); }
     .btn-primary{
       background:var(--primary);
       color:#fff;
@@ -224,7 +261,6 @@
       font-weight:700;
       text-decoration:none;
     }
-
     .backlink{
       display:inline-block;
       margin-top:12px;
@@ -234,74 +270,82 @@
       font-weight:700;
     }
 
-    .error{
-      color:#b42318;
-      font-weight:700;
-      margin:10px auto 0;
-      max-width:520px;
-    }
-    .hint{
-      color:var(--muted);
-      font-size:12.5px;
-      max-width:520px;
-      margin:10px auto 0;
-    }
-    
-    .btn-sm{
-    padding:8px 10px;
-    border-radius:10px;
-    font-size:13px;
-    font-weight:800;
-    width:auto;
-  }
-  .btn-secondary{
-    background:#fff;
-    border:1px solid var(--primary);
-    color:var(--primary);
-  }
-  .btn-danger{
-    background:#b42318;
-    color:#fff;
-  }
+    .error{ color:#b42318; font-weight:700; margin:10px auto 0; max-width:520px; }
+    .hint{ color:var(--muted); font-size:12.5px; max-width:520px; margin:10px auto 0; }
 
-    /* Footer façon mockup */
+    .btn-sm{ padding:8px 10px; border-radius:10px; font-size:13px; font-weight:800; width:auto; }
+    .btn-secondary{ background:#fff; border:1px solid var(--primary); color:var(--primary); }
+    .btn-danger{ background:#b42318; color:#fff; }
+
+    /* ── Footer ── */
     footer{
       background:var(--footer-bg);
-      border-top:1px solid #b7b7c9;
+      border-top:3px solid var(--footer-border);
     }
     .footer-inner{
       max-width:var(--maxw);
       margin:0 auto;
-      padding:14px 16px;
-      display:flex;
-      gap:12px;
+      padding:18px 16px;
+      display:grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap:16px;
       align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-      font-size:12px;
-      color:#2b2f36;
+    }
+    .footer-brand{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+    }
+    .footer-brand-name{
+      font-weight:700;
+      font-size:14px;
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      gap:5px;
+    }
+    .footer-brand-name svg{
+      width:16px;
+      height:16px;
+      flex-shrink:0;
+    }
+    .footer-tagline{
+      font-size:11px;
+      color:var(--muted);
+      font-style:italic;
     }
     .footer-links{
       display:flex;
-      gap:12px;
+      gap:16px;
       flex-wrap:wrap;
+      justify-content:center;
     }
     .footer-links a{
       color:#2b2f36;
       text-decoration:none;
-      font-weight:700;
+      font-weight:600;
+      font-size:12px;
     }
-    .footer-links a:hover{ text-decoration:underline; }
+    .footer-links a:hover{ text-decoration:underline; color:var(--primary); }
+    .footer-copy{
+      font-size:11px;
+      color:var(--muted);
+      text-align:right;
+    }
 
-    /* Mobile-first : nav passe en colonne si besoin */
+    /* ── Mobile ── */
     @media (max-width: 520px){
       .header-inner{ align-items:flex-start; flex-direction:column; }
       nav{ justify-content:flex-start; }
-      .page-frame{ padding:20px 12px 16px; }
-      .admin-menu-items{
-        position:static;
-        margin-top:6px;
+      .page-frame{ padding:20px 12px 16px; border-radius:8px; }
+      .admin-menu-items{ position:static; margin-top:6px; }
+      .footer-inner{
+        grid-template-columns:1fr;
+        gap:10px;
+        text-align:center;
       }
+      .footer-brand{ align-items:center; }
+      .footer-copy{ text-align:center; }
     }
   </style>
 </head>
@@ -309,12 +353,27 @@
 <body>
   <header>
     <div class="header-inner">
-      <div class="brand">CESIZen</div>
+      <a href="{% url 'home' %}" class="brand">
+        <!-- Inline SVG logo: lotus / zen leaf -->
+        <svg class="brand-icon" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="15" cy="15" r="14" fill="#e8f4fd" stroke="#b9d5ea" stroke-width="1"/>
+          <!-- Left petal -->
+          <path d="M15 22 C9 20, 7 14, 11 10 C12 13, 13 17, 15 22Z" fill="#1e88e5" opacity=".75"/>
+          <!-- Right petal -->
+          <path d="M15 22 C21 20, 23 14, 19 10 C18 13, 17 17, 15 22Z" fill="#1e88e5" opacity=".75"/>
+          <!-- Center petal -->
+          <path d="M15 22 C12 17, 12 12, 15 8 C18 12, 18 17, 15 22Z" fill="#1565c0" opacity=".90"/>
+          <!-- Stem -->
+          <line x1="15" y1="22" x2="15" y2="25" stroke="#1565c0" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        CESI<span class="brand-zen">Zen</span>
+      </a>
+
       <nav>
-        <a href="{% url 'home' %}">Accueil</a>
-        <a href="{% url 'articles' %}">Articles</a>
-        <a href="{% url 'tracker_list' %}">Tracker</a>
-      
+        <a href="{% url 'home' %}" {% if request.resolver_match.url_name == 'home' %}class="nav-active"{% endif %}>Accueil</a>
+        <a href="{% url 'articles' %}" {% if request.resolver_match.url_name == 'articles' %}class="nav-active"{% endif %}>Articles</a>
+        <a href="{% url 'tracker_list' %}" {% if request.resolver_match.url_name == 'tracker_list' %}class="nav-active"{% endif %}>Tracker</a>
+
         {% if user.is_authenticated %}
           {% if is_admin_user %}
             <details class="admin-menu">
@@ -326,13 +385,13 @@
               </div>
             </details>
           {% endif %}
-            <a href="{% url 'profile' %}">Mon compte</a>
-            <form class="nav-logout-form" method="post" action="{% url 'logout' %}">
-              {% csrf_token %}
-              <button class="nav-logout-btn" type="submit">Déconnexion</button>
-            </form>
+          <a href="{% url 'profile' %}" {% if request.resolver_match.url_name == 'profile' %}class="nav-active"{% endif %}>Mon compte</a>
+          <form class="nav-logout-form" method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button class="nav-logout-btn" type="submit">Déconnexion</button>
+          </form>
         {% else %}
-            <a href="{% url 'login' %}">Connexion</a>
+          <a href="{% url 'login' %}" {% if request.resolver_match.url_name == 'login' %}class="nav-active"{% endif %}>Connexion</a>
         {% endif %}
       </nav>
     </div>
@@ -346,10 +405,30 @@
 
   <footer>
     <div class="footer-inner">
-      <div>2025 Ministère de la Santé et de la Prévention</div>
+
+      <!-- Left: brand + tagline -->
+      <div class="footer-brand">
+        <span class="footer-brand-name">
+          <svg viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M15 26 C9 23, 7 15, 11 9 C12 13, 13 19, 15 26Z" fill="#1e88e5" opacity=".7"/>
+            <path d="M15 26 C21 23, 23 15, 19 9 C18 13, 17 19, 15 26Z" fill="#1e88e5" opacity=".7"/>
+            <path d="M15 26 C12 19, 12 12, 15 6 C18 12, 18 19, 15 26Z" fill="#1565c0" opacity=".9"/>
+          </svg>
+          CESIZen
+        </span>
+        <span class="footer-tagline">Votre espace bien-être mental</span>
+      </div>
+
+      <!-- Center: links -->
       <div class="footer-links">
         {% include "partials/footer_links.html" %}
       </div>
+
+      <!-- Right: copyright -->
+      <div class="footer-copy">
+        &copy; 2026 Ministère de la Santé<br>et de la Prévention
+      </div>
+
     </div>
   </footer>
 </body>
