@@ -327,7 +327,7 @@ class EmotionsManagementCommandsTests(TestCase):
             PageInformation.objects.filter(slug="donnees-personnelles", statut="publie").exists()
         )
 
-    def test_seed_legal_pages_reset_clears_existing_pages_then_recreates(self):
+    def test_seed_legal_pages_reset_clears_legal_pages_then_recreates(self):
         PageInformation.objects.create(
             titre="Custom",
             slug="custom-page",
@@ -338,6 +338,6 @@ class EmotionsManagementCommandsTests(TestCase):
 
         call_command("seed_legal_pages", "--reset")
 
-        self.assertFalse(PageInformation.objects.filter(slug="custom-page").exists())
+        self.assertTrue(PageInformation.objects.filter(slug="custom-page").exists())
         self.assertTrue(PageInformation.objects.filter(slug="mentions-legales").exists())
         self.assertTrue(PageInformation.objects.filter(slug="donnees-personnelles").exists())
