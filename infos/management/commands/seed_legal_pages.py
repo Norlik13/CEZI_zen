@@ -119,3 +119,4 @@ class Command(BaseCommand):
         )
 
         self.stdout.write(self.style.SUCCESS("Pages légales créées/vérifiées avec succès."))
+
