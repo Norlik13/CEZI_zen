@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404, render
 
 from .models import PageInformation
 
-LEGAL_PAGE_SLUGS = {"mentions-legales", "donnees-personnelles"}
+LEGAL_PAGE_SLUGS = {"mentions-legales", "donnees-personnelles", "contact"}
 
 
 def _published_articles(limit=None):

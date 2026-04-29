@@ -4,13 +4,12 @@ from infos.models import PageInformation
 
 MENTIONS = """\
 ## Éditeur du site
-CESIZen (projet scolaire)
+CESIZen
 
 -Hébergement
-Application hébergée en local (environnement de développement) dans le cadre d’un projet scolaire.
+Application hébergée en local (environnement de développement)
 
 -Propriété intellectuelle
-Les contenus (textes, maquettes, éléments graphiques) sont produits dans le cadre d’un projet pédagogique.
 Toute reproduction non autorisée est interdite.
 
 -Limitation de responsabilité
@@ -36,7 +35,7 @@ Responsable : Ministère de la Santé et de la Prévention
 - Consentement : acceptation RGPD lors de la création du compte (tracé par date)
 
 -Destinataires
-- Équipe projet (administration technique) dans le cadre du projet scolaire.
+- Équipe projet (administration technique).
 Aucun partage à des tiers commerciaux.
 
 -Durée de conservation
@@ -58,6 +57,12 @@ L’application ne dépose pas de cookies publicitaires. Si des cookies de mesur
 ils seront configurés conformément aux règles applicables (information et, si nécessaire, consentement).
 """
 
+CONTACT="""\
+-Email: contact@cesizen.fr
+-Adresse: 14 Av. Duquesne, 75350 Paris
+-Telephone: 01 40 56 60 00
+"""
+
 class Command(BaseCommand):
     help = "Crée les pages Mentions légales et Données personnelles (RGPD) si elles n'existent pas."
 
@@ -70,7 +75,15 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options["reset"]:
-            PageInformation.objects.all().delete()
+            mention_legale = PageInformation.objects.filter(slug="mentions-legales")
+            if mention_legale:
+                mention_legale.delete()
+            donnees_personnelles = PageInformation.objects.filter(slug="donnees-personnelles")
+            if donnees_personnelles:
+                donnees_personnelles.delete()
+            contact = PageInformation.objects.filter(slug="contact")
+            if contact:
+                contact.delete()
             self.stdout.write(self.style.WARNING("Référentiel existant supprimé."))
 
         now = timezone.now()
@@ -95,4 +108,15 @@ class Command(BaseCommand):
             },
         )
 
+        PageInformation.objects.get_or_create(
+            slug="contact",
+            defaults={
+                "titre": "Contact",
+                "contenu": CONTACT,
+                "statut": "publie",
+                "date_publication": now,
+            },
+        )
+
         self.stdout.write(self.style.SUCCESS("Pages légales créées/vérifiées avec succès."))
+
