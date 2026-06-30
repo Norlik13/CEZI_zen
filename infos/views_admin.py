@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_GET, require_http_methods
 from django.utils import timezone
 
 from accounts.permissions import is_admin
@@ -7,12 +8,14 @@ from .models import PageInformation
 from .forms import PageInformationForm
 
 
+@require_GET
 @user_passes_test(is_admin)
 def page_list(request):
     pages = PageInformation.objects.all().order_by("-date_mise_a_jour")
     return render(request, "infos/admin/page_list.html", {"pages": pages})
 
 
+@require_http_methods(["GET", "POST"])
 @user_passes_test(is_admin)
 def page_create(request):
     if request.method == "POST":
@@ -30,6 +33,7 @@ def page_create(request):
     return render(request, "infos/admin/page_form.html", {"form": form, "mode": "create"})
 
 
+@require_http_methods(["GET", "POST"])
 @user_passes_test(is_admin)
 def page_update(request, pk):
     page = get_object_or_404(PageInformation, pk=pk)
@@ -48,6 +52,7 @@ def page_update(request, pk):
     return render(request, "infos/admin/page_form.html", {"form": form, "mode": "edit", "page": page})
 
 
+@require_http_methods(["GET", "POST"])
 @user_passes_test(is_admin)
 def page_delete(request, pk):
     page = get_object_or_404(PageInformation, pk=pk)

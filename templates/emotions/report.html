@@ -9,8 +9,8 @@
 
   <div class="card">
     <form method="get">
-      <label>Période</label>
-      <select name="period" onchange="this.form.submit()">
+      <label for="period">Période</label>
+      <select id=period" name="period" onchange="this.form.submit()">
   <option value="week" {% if period == "week" %}selected{% endif %}>Semaine</option>
   <option value="month" {% if period == "month" %}selected{% endif %}>Mois</option>
   <option value="quarter" {% if period == "quarter" %}selected{% endif %}>Trimestre</option>

@@ -15,7 +15,8 @@
 
   <div class="card" style="max-width:100%; overflow:auto;">
     <form method="get" style="margin-bottom:12px; display:flex; gap:8px;">
-      <input type="text" name="q" value="{{ query }}" placeholder="Rechercher username ou email">
+      <label for="search" style="position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0;">Rechercher un utilisateur</label>
+      <input id="search" type="text" name="q" value="{{ query }}" placeholder="Rechercher username ou email">
       <button type="submit" class="btn btn-sm btn-secondary">Rechercher</button>
     </form>
 

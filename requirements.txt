@@ -1,0 +1,21 @@
+# requirements.txt — Dépendances CESIZen
+# Extrait du .venv (Python 3.13, Django 6.0.3)
+
+# ── Framework principal ───────────────────────────────────────────────────────
+Django==6.0.3
+asgiref==3.11.1
+sqlparse==0.5.5
+tzdata==2025.3
+
+# ── Fichiers statiques (production) ──────────────────────────────────────────
+whitenoise==6.9.0
+
+# ── Serveur WSGI (production) ─────────────────────────────────────────────────
+gunicorn==23.0.0
+
+# ── Couverture de tests (CI) ──────────────────────────────────────────────────
+coverage==7.6.1
+
+# ── Base de données MariaDB (production) ──────────────────────────────────────
+# Décommenter pour la production :
+# mysqlclient==2.2.4

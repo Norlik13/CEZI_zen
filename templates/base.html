@@ -46,11 +46,29 @@
       justify-content:space-between;
       gap:12px;
     }
+
+    /* Logo */
     .brand{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      text-decoration:none;
+      color:var(--text);
       font-weight:700;
+      font-size:18px;
       letter-spacing:.2px;
+      flex-shrink:0;
+    }
+    .brand-icon{
+      width:30px;
+      height:30px;
+      flex-shrink:0;
+    }
+    .brand-zen{
+      color:var(--primary);
     }
 
+    /* Nav */
     nav{
       display:flex;
       align-items:center;
@@ -69,6 +87,18 @@
     nav a:hover{
       background:rgba(255,255,255,.55);
     }
+    nav a.nav-active::after{
+      content:'';
+      position:absolute;
+      bottom:2px;
+      left:10px;
+      right:10px;
+      height:2px;
+      background:var(--primary);
+      border-radius:2px;
+    }
+
+    /* Admin dropdown */
     .admin-menu{
       position:relative;
     }
@@ -82,6 +112,19 @@
       cursor:pointer;
       user-select:none;
       background:transparent;
+      transition: background .15s;
+      display:flex;
+      align-items:center;
+      gap:4px;
+    }
+    .admin-menu summary::after{
+      content:'▾';
+      font-size:11px;
+      color:var(--muted);
+      transition: transform .15s;
+    }
+    .admin-menu[open] summary::after{
+      transform: rotate(180deg);
     }
     .admin-menu summary:hover{
       background:rgba(255,255,255,.55);
@@ -123,6 +166,7 @@
       border:none;
       background:transparent;
       cursor:pointer;
+      transition: background .15s;
     }
     .nav-logout-btn:hover{
       background:rgba(255,255,255,.55);
@@ -184,6 +228,7 @@
       outline:none;
       font-size:14px;
       background:#fff;
+      transition: border-color .15s, box-shadow .15s;
     }
     textarea{ min-height:90px; resize:vertical; }
     input:focus, select:focus, textarea:focus{
@@ -208,7 +253,9 @@
       text-decoration:none;
       text-align:center;
       font-size:14px;
+      transition: background .15s, transform .1s;
     }
+    .btn:active{ transform: scale(.98); }
     .btn-primary{
       background:var(--primary);
       color:#fff;

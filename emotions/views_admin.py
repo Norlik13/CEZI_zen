@@ -1,17 +1,20 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_GET, require_http_methods
 
 from accounts.permissions import is_admin
 from .models import EmotionBase, Emotion
 from .forms import EmotionBaseForm, EmotionForm
 
 
+@require_GET
 @user_passes_test(is_admin)
 def base_list(request):
     bases = EmotionBase.objects.all().order_by("libelle")
     return render(request, "emotions/admin/base_list.html", {"bases": bases})
 
 
+@require_http_methods(["GET", "POST"])
 @user_passes_test(is_admin)
 def base_create(request):
     if request.method == "POST":
@@ -24,6 +27,7 @@ def base_create(request):
     return render(request, "emotions/admin/base_form.html", {"form": form, "mode": "create"})
 
 
+@require_http_methods(["GET", "POST"])
 @user_passes_test(is_admin)
 def base_update(request, pk):
     base = get_object_or_404(EmotionBase, pk=pk)
@@ -37,6 +41,7 @@ def base_update(request, pk):
     return render(request, "emotions/admin/base_form.html", {"form": form, "mode": "edit", "base": base})
 
 
+@require_http_methods(["GET", "POST"])
 @user_passes_test(is_admin)
 def base_delete(request, pk):
     base = get_object_or_404(EmotionBase, pk=pk)
@@ -46,6 +51,7 @@ def base_delete(request, pk):
     return render(request, "emotions/admin/base_delete.html", {"base": base})
 
 
+@require_GET
 @user_passes_test(is_admin)
 def emotion_list(request):
     base_id = request.GET.get("base")
@@ -61,6 +67,7 @@ def emotion_list(request):
     })
 
 
+@require_http_methods(["GET", "POST"])
 @user_passes_test(is_admin)
 def emotion_create(request):
     if request.method == "POST":
@@ -73,6 +80,7 @@ def emotion_create(request):
     return render(request, "emotions/admin/emotion_form.html", {"form": form, "mode": "create"})
 
 
+@require_http_methods(["GET", "POST"])
 @user_passes_test(is_admin)
 def emotion_update(request, pk):
     emo = get_object_or_404(Emotion, pk=pk)
@@ -86,6 +94,7 @@ def emotion_update(request, pk):
     return render(request, "emotions/admin/emotion_form.html", {"form": form, "mode": "edit", "emo": emo})
 
 
+@require_http_methods(["GET", "POST"])
 @user_passes_test(is_admin)
 def emotion_delete(request, pk):
     emo = get_object_or_404(Emotion, pk=pk)
