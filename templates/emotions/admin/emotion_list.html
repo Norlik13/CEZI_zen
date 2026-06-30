@@ -10,9 +10,9 @@
   <div class="card">
     <div class="row">
       <div>
-        <label>Filtrer par base</label>
+        <label for="filter">Filtrer par base</label>
         <form method="get">
-          <select name="base" onchange="this.form.submit()">
+          <select id="filter" name="base" onchange="this.form.submit()">
             <option value="">Toutes</option>
             {% for b in bases %}
               <option value="{{ b.id }}" {% if base_id == b.id|stringformat:"s" %}selected{% endif %}>

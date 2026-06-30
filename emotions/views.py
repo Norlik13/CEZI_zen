@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Avg
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.views.decorators.http import require_GET, require_http_methods
 
 from .models import TrackerItem
 from .forms import TrackerItemForm
@@ -59,7 +60,7 @@ def _period_start(period: str):
     start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     return "month", start
 
-
+@require_GET
 @login_required
 def tracker_list(request):
     period_raw = request.GET.get("period", "month")
@@ -71,7 +72,7 @@ def tracker_list(request):
     items = items.select_related("emotion__base").order_by("-date_saisie")
     return render(request, "emotions/tracker_list.html", {"items": items, "period": period})
 
-
+@require_http_methods(["GET", "POST"])
 @login_required
 def tracker_create(request):
     if request.method == "POST":
@@ -90,6 +91,7 @@ def tracker_create(request):
     })
 
 
+@require_http_methods(["GET", "POST"])
 @login_required
 def tracker_update(request, pk):
     item = get_object_or_404(TrackerItem, pk=pk, user=request.user)
@@ -109,6 +111,7 @@ def tracker_update(request, pk):
     })
 
 
+@require_http_methods(["GET", "POST"])
 @login_required
 def tracker_delete(request, pk):
     item = get_object_or_404(TrackerItem, pk=pk, user=request.user)
@@ -119,7 +122,7 @@ def tracker_delete(request, pk):
 
     return render(request, "emotions/tracker_delete.html", {"item": item})
 
-
+@require_GET
 @login_required
 def tracker_report(request):
     period_raw = request.GET.get("period", "month")
