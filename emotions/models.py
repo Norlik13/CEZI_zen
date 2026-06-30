@@ -2,6 +2,7 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+
 class EmotionBase(models.Model):
     libelle = models.CharField(max_length=60, unique=True)
     actif = models.BooleanField(default=True)

@@ -28,6 +28,7 @@ REFERENTIEL = {
     ],
 }
 
+
 class Command(BaseCommand):
     help = "Seed du référentiel d'émotions (N1 -> N2) pour le tracker."
 
