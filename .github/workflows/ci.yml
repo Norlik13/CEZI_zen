@@ -14,7 +14,7 @@ jobs:
   # ── 1. Install / Check / Test / SonarCloud ────────────────────────────────
   ci:
     name: Install · Check · Test · Sonar
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -49,7 +49,7 @@ jobs:
   # ── 2. Lint ───────────────────────────────────────────────────────────────
   lint:
     name: Qualité du code (flake8)
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
