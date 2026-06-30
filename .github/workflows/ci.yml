@@ -1,0 +1,91 @@
+name: CI CESIZen
+
+on:
+  push:
+    branches: [ master, develop ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  PYTHON_VERSION: "3.13"
+
+jobs:
+
+  # ── 1. Install / Check / Test / SonarCloud ────────────────────────────────
+  ci:
+    name: Install · Check · Test · Sonar
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # required by SonarCloud for blame/history
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Django system check
+        env:
+          DJANGO_SETTINGS_MODULE: CEZIZen.settings
+          DJANGO_SECRET_KEY: ci-test-key-not-for-production
+          DJANGO_DEBUG: "True"
+        run: python manage.py check
+
+      - name: Run tests with coverage
+        env:
+          DJANGO_SETTINGS_MODULE: CEZIZen.settings
+          DJANGO_SECRET_KEY: ci-test-key-not-for-production
+          DJANGO_DEBUG: "True"
+        run: |
+          coverage run --source=accounts,infos,emotions,CEZIZen manage.py test --verbosity=2
+          coverage xml
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+  # ── 2. Lint ───────────────────────────────────────────────────────────────
+  lint:
+    name: Qualité du code (flake8)
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install flake8
+      - run: flake8 accounts/ infos/ emotions/ CEZIZen/ --max-line-length=120 --extend-ignore=E501,W503 --exclude=migrations/,__pycache__/
+
+  # ── 3. Docker (GitHub-hosted, uniquement sur push) ────────────────────────
+  docker:
+    name: Build image Docker
+    runs-on: ubuntu-latest
+    needs: [ ci, lint ]
+    if: github.event_name == 'push'
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository_owner }}/cesizen
+          tags: |
+            type=sha,prefix=sha-,format=short
+            type=ref,event=branch
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/master' }}
+      - uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
