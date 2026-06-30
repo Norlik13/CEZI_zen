@@ -1,0 +1,64 @@
+name: "✨ Demande d'évolution"
+description: Proposer une nouvelle fonctionnalité ou amélioration
+title: "[ÉVOLUTION] "
+labels: ["enhancement", "à analyser"]
+
+body:
+  - type: dropdown
+    id: module
+    attributes:
+      label: Module concerné
+      options:
+        - Comptes utilisateurs
+        - Informations
+        - Tracker d'émotions
+        - Back-office administration
+        - Infrastructure / déploiement
+        - Sécurité / RGPD
+        - Nouveau module
+        - Autre
+    validations:
+      required: true
+
+  - type: textarea
+    id: besoin
+    attributes:
+      label: Besoin exprimé
+      placeholder: "En tant qu'utilisateur connecté, je souhaite..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: valeur
+    attributes:
+      label: Valeur métier
+      description: Pourquoi cette évolution est-elle importante ?
+    validations:
+      required: true
+
+  - type: textarea
+    id: criteres
+    attributes:
+      label: Critères d'acceptation
+      placeholder: |
+        - [ ] Critère 1
+        - [ ] Critère 2
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priorite
+    attributes:
+      label: Priorité suggérée
+      options:
+        - "🔴 Haute"
+        - "🟡 Moyenne"
+        - "🟢 Basse"
+    validations:
+      required: true
+
+  - type: textarea
+    id: contexte
+    attributes:
+      label: Contexte additionnel
+      description: Maquettes, captures d'écran, liens...
