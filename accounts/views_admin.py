@@ -8,6 +8,7 @@ from .forms import UserAdminForm
 from .models import User
 from .permissions import is_admin
 
+
 @require_GET
 @user_passes_test(is_admin)
 def user_list(request):
@@ -22,6 +23,7 @@ def user_list(request):
         "accounts/admin/user_list.html",
         {"users": users, "query": query},
     )
+
 
 def _would_lock_self_out(request, updated_user, target):
     """True if the edit would remove the current admin's own access."""

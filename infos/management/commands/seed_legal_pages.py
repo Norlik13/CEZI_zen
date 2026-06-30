@@ -57,11 +57,12 @@ L’application ne dépose pas de cookies publicitaires. Si des cookies de mesur
 ils seront configurés conformément aux règles applicables (information et, si nécessaire, consentement).
 """
 
-CONTACT="""\
+CONTACT=""" \
 -Email: contact@cesizen.fr
 -Adresse: 14 Av. Duquesne, 75350 Paris
 -Telephone: 01 40 56 60 00
 """
+
 
 class Command(BaseCommand):
     help = "Crée les pages Mentions légales et Données personnelles (RGPD) si elles n'existent pas."
@@ -119,4 +120,3 @@ class Command(BaseCommand):
         )
 
         self.stdout.write(self.style.SUCCESS("Pages légales créées/vérifiées avec succès."))
-

@@ -60,6 +60,7 @@ def _period_start(period: str):
     start = now.replace(day=1, hour=0, minute=0, second=0, microsecond=0)
     return "month", start
 
+
 @require_GET
 @login_required
 def tracker_list(request):
@@ -71,6 +72,7 @@ def tracker_list(request):
         items = items.filter(date_saisie__gte=start)
     items = items.select_related("emotion__base").order_by("-date_saisie")
     return render(request, "emotions/tracker_list.html", {"items": items, "period": period})
+
 
 @require_http_methods(["GET", "POST"])
 @login_required
@@ -121,6 +123,7 @@ def tracker_delete(request, pk):
         return redirect("tracker_list")
 
     return render(request, "emotions/tracker_delete.html", {"item": item})
+
 
 @require_GET
 @login_required
