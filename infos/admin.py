@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import PageInformation
 
+
 @admin.register(PageInformation)
 class PageInformationAdmin(admin.ModelAdmin):
     list_display = ("titre", "slug", "statut", "date_publication", "date_mise_a_jour")

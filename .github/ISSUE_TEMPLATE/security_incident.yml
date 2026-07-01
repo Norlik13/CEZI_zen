@@ -1,0 +1,72 @@
+name: "🔒 Incident de sécurité"
+description: Signaler une vulnérabilité ou un incident (usage interne uniquement)
+title: "[SÉCURITÉ] "
+labels: ["security", "bloquant critique", "confidentiel"]
+assignees: ["Norlik13"]
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ⚠️ **Usage interne uniquement.** Ne pas détailler publiquement une vulnérabilité exploitable avant correction.
+        En cas de fuite de données personnelles : notification CNIL obligatoire sous 72h (RGPD Art. 33).
+
+  - type: dropdown
+    id: type_incident
+    attributes:
+      label: Type d'incident
+      options:
+        - Vulnérabilité dans le code applicatif
+        - Fuite de données personnelles
+        - Accès non autorisé
+        - Dépendance vulnérable (CVE)
+        - Tentative d'intrusion détectée
+        - Mauvaise configuration serveur
+        - Autre
+    validations:
+      required: true
+
+  - type: dropdown
+    id: niveau
+    attributes:
+      label: Niveau de criticité
+      options:
+        - "P1 — Critique : fuite de données ou compromission serveur"
+        - "P2 — Élevé : accès non autorisé, DDoS actif"
+        - "P3 — Moyen : tentatives répétées, anomalie suspecte"
+        - "P4 — Faible : anomalie dans les logs sans impact confirmé"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description de l'incident
+    validations:
+      required: true
+
+  - type: textarea
+    id: perimetre
+    attributes:
+      label: Périmètre impacté
+      description: Quelles données, fonctionnalités ou utilisateurs sont concernés ?
+
+  - type: input
+    id: detection
+    attributes:
+      label: Date et heure de détection
+      placeholder: "Ex : 2025-06-01 14:30 UTC"
+
+  - type: textarea
+    id: actions
+    attributes:
+      label: Actions déjà entreprises
+
+  - type: checkboxes
+    id: rgpd
+    attributes:
+      label: Obligations RGPD
+      options:
+        - label: "Des données personnelles sont-elles concernées ? (évaluation en cours)"
+        - label: Notification CNIL sous 72h si données exposées (Art. 33)
+        - label: Notification utilisateurs affectés si risque élevé (Art. 34)

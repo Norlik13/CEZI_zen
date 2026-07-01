@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_GET
 
 from .models import PageInformation
 
@@ -17,6 +18,7 @@ def _published_articles(limit=None):
     return qs
 
 
+@require_GET
 def home(request):
     context = {
         "show_tracker": True,
@@ -26,6 +28,7 @@ def home(request):
     return render(request, "infos/home.html", context)
 
 
+@require_GET
 def articles(request):
     context = {
         "show_tracker": False,
@@ -35,6 +38,7 @@ def articles(request):
     return render(request, "infos/home.html", context)
 
 
+@require_GET
 def page_detail(request, slug):
     page = get_object_or_404(PageInformation, slug=slug, statut="publie")
     return render(request, "infos/page_detail.html", {"page": page})
