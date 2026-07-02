@@ -17,8 +17,6 @@ services:
       - ${ENV_FILE:-.env.prod}
     expose:
       - "8000"
-    depends_on:
-      - nginx
 
   nginx:
     image: nginx:1.27-alpine

@@ -75,6 +75,7 @@ jobs:
         env:
           IMAGE_TAG: ${{ github.event.inputs.image_tag }}
         run: |
+          $ErrorActionPreference = "Stop"
           if ("${{ github.event.inputs.image_tag }}" -eq "latest") {
             $env:ENV_FILE = "$env:USERPROFILE\.env.dev"
             @'
@@ -87,5 +88,7 @@ jobs:
           '@ | Out-File -Encoding utf8 $env:ENV_FILE
           }
           docker compose -f docker-compose.prod.yml pull
+          if ($LASTEXITCODE -ne 0) { throw "docker compose pull failed" }
           docker compose -f docker-compose.prod.yml up -d
+          if ($LASTEXITCODE -ne 0) { throw "docker compose up failed" }
           docker image prune -f
