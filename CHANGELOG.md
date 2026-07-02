@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.1.0 (2026-07-02)
+
+### Continuous Integration
+
+- Switch to self-hosted runner for local deploy, pull image instead of building
+  ([`68d487f`](https://github.com/Norlik13/CEZI_zen/commit/68d487f2e8926ab10252ef1ea3083b6b7804cdeb))
+
+
 ## v0.1.0-rc.1 (2026-07-01)
 
 ### Continuous Integration
