@@ -94,6 +94,7 @@ Application disponible sur **http://localhost:8000**
 
 ```bash
 # Développement
+cp .env.dev.example .env.dev
 docker compose up --build
 
 # Production

@@ -56,20 +56,36 @@ jobs:
   #   1. GitHub repo -> Settings -> Actions -> Runners -> New self-hosted runner.
   #   2. Follow the download/config/run instructions for your OS to register
   #      this machine as a runner (it will sit and listen for jobs).
-  #   3. Create .env.prod locally from .env.prod.example and fill in real values.
-  #   4. Make sure this machine is logged in to ghcr.io, or rely on the
-  #      GITHUB_TOKEN login step below (works if the package is public/internal
-  #      to the repo).
+  #   3. GitHub repo -> Settings -> Secrets and variables -> Actions -> New
+  #      repository secret. Create two secrets holding the FULL CONTENTS of
+  #      each env file (copy-paste the whole file as the secret value):
+  #        ENV_DEV_FILE   - contents of .env.dev  (see .env.dev.example)
+  #        ENV_PROD_FILE  - contents of .env.prod (see .env.prod.example)
+  #      The workflow writes these to disk fresh on every run — nothing to
+  #      keep in sync manually on the runner machine.
+  #   4. The ghcr.io/norlik13/cesizen package is public, so no login is needed
+  #      to pull it.
   deploy-local:
     name: Deploy locally (self-hosted)
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
-      - name: Pull and start containers
+      - name: Write env file and start containers
         env:
           IMAGE_TAG: ${{ github.event.inputs.image_tag }}
         run: |
-          docker compose -f docker-compose.prod.yml --env-file .env.prod pull
-          docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+          if ("${{ github.event.inputs.image_tag }}" -eq "latest") {
+            $env:ENV_FILE = "$env:USERPROFILE\.env.dev"
+            @'
+          ${{ secrets.ENV_DEV_FILE }}
+          '@ | Out-File -Encoding utf8 $env:ENV_FILE
+          } else {
+            $env:ENV_FILE = "$env:USERPROFILE\.env.prod"
+            @'
+          ${{ secrets.ENV_PROD_FILE }}
+          '@ | Out-File -Encoding utf8 $env:ENV_FILE
+          }
+          docker compose -f docker-compose.prod.yml pull
+          docker compose -f docker-compose.prod.yml up -d
           docker image prune -f
