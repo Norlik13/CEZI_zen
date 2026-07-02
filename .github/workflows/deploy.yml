@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       image_tag:
-        description: "Image tag to deploy (e.g. 1.4.0, 1.4.0-rc.1, latest)"
+        description: "Image tag to deploy: 'latest' = current dev build, or a pinned prod version (e.g. 1.4.0)"
         required: true
         default: "latest"
 
