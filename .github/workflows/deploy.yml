@@ -65,9 +65,6 @@ jobs:
     runs-on: self-hosted
     permissions:
       packages: read
-    defaults:
-      run:
-        shell: bash   # avoid Windows PowerShell's default execution-policy restriction
     steps:
       - uses: actions/checkout@v4
 
