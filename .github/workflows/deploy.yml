@@ -1,0 +1,80 @@
+name: Deploy
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CD — Deploy a published image (the "make a container out of it" step).
+# Assumes the image was already built & pushed to ghcr.io by release.yml.
+#
+# There are two deploy paths below:
+#   1. deploy-server (COMMENTED OUT) — the eventual remote-server deploy over
+#      SSH, for once a real server exists. Kept as a template.
+#   2. deploy-local — runs on a self-hosted runner (your own machine), used
+#      until a server is available. See setup notes above the job.
+# ─────────────────────────────────────────────────────────────────────────────
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "Image tag to deploy: 'latest' = current dev build, or a pinned prod version (e.g. 1.4.0)"
+        required: true
+        default: "latest"
+
+jobs:
+  # ── Remote server deploy (disabled until a server exists) ──────────────────
+  #
+  # PREREQUISITES:
+  #   1. A reachable server with Docker + Docker Compose installed, and
+  #      docker-compose.prod.yml + nginx/ + .env.prod present at /opt/cesizen
+  #      (adjust the path below).
+  #   2. Repository secrets:
+  #        DEPLOY_HOST     - server hostname or IP
+  #        DEPLOY_USER     - SSH user
+  #        DEPLOY_SSH_KEY  - private SSH key with access to the server
+  #
+  # deploy-server:
+  #   name: Deploy to server
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Deploy over SSH
+  #       uses: appleboy/ssh-action@v1
+  #       with:
+  #         host: ${{ secrets.DEPLOY_HOST }}
+  #         username: ${{ secrets.DEPLOY_USER }}
+  #         key: ${{ secrets.DEPLOY_SSH_KEY }}
+  #         script: |
+  #           set -e
+  #           cd /opt/cesizen
+  #           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+  #           export IMAGE_TAG="${{ github.event.inputs.image_tag }}"
+  #           docker compose -f docker-compose.prod.yml --env-file .env.prod pull
+  #           docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+  #           docker image prune -f
+
+  # ── Local deploy via self-hosted runner ─────────────────────────────────────
+  #
+  # SETUP (one-time, until a real server exists):
+  #   1. GitHub repo -> Settings -> Actions -> Runners -> New self-hosted runner.
+  #   2. Follow the download/config/run instructions for your OS to register
+  #      this machine as a runner (it will sit and listen for jobs).
+  #   3. Create .env.prod locally from .env.prod.example and fill in real values.
+  #   4. Make sure this machine is logged in to ghcr.io, or rely on the
+  #      GITHUB_TOKEN login step below (works if the package is public/internal
+  #      to the repo).
+  deploy-local:
+    name: Deploy locally (self-hosted)
+    runs-on: self-hosted
+    permissions:
+      packages: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to ghcr.io
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Pull and start containers
+        env:
+          IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+        run: |
+          docker compose -f docker-compose.prod.yml --env-file .env.prod pull
+          docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
+          docker image prune -f
