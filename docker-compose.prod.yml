@@ -3,7 +3,7 @@
 
 services:
   web:
-    build: .
+    image: ghcr.io/norlik13/cesizen:${IMAGE_TAG:-latest}
     restart: unless-stopped
     command: >
       sh -c "python manage.py migrate --noinput &&
