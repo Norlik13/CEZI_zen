@@ -54,7 +54,6 @@ master ────────────────────────�
 | Base de données (dev) | SQLite |
 | Base de données (prod) | MariaDB |
 | Serveur WSGI | Gunicorn |
-| Reverse proxy | Nginx |
 | Conteneurisation | Docker + Docker Compose |
 | CI/CD | GitHub Actions (runner local) |
 | Qualité du code | SonarCloud |
@@ -103,6 +102,8 @@ cp .env.prod.example .env.prod
 docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
 ```
 
+Application disponible sur **http://localhost:8000** (dev comme prod).
+
 ## Tests
 
 ```bash
@@ -123,10 +124,9 @@ CEZIZen/
 │   ├── ISSUE_TEMPLATE/            # Templates de tickets
 │   └── pull_request_template.md
 ├── sonar-project.properties       # Configuration SonarCloud
-├── nginx/nginx.conf               # Configuration reverse proxy
 ├── Dockerfile
 ├── docker-compose.yml             # Dev local
 ├── docker-compose.prod.yml        # Production
-├── .env                           # Variables dev (commité, sans secrets)
+├── .env.dev.example               # Modèle développement (ne pas commiter .env.dev)
 └── .env.prod.example              # Modèle production (ne pas commiter .env.prod)
 ```
