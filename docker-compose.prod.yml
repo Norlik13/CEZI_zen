@@ -10,7 +10,7 @@ services:
   web:
     image: ghcr.io/norlik13/cesizen:${IMAGE_TAG:-latest}
     restart: unless-stopped
-    command: sh -c "python manage.py migrate --noinput && gunicorn CEZIZen.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120 --access-logfile - --error-logfile -"
+    command: sh -c "python manage.py migrate --noinput && gunicorn CEZIZen.wsgi:application --bind 127.0.0.1:8000 --workers 3 --timeout 120 --access-logfile - --error-logfile -"
     env_file:
       - ${ENV_FILE:-.env.prod}
     ports:
