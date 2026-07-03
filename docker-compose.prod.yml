@@ -1,37 +1,17 @@
 # docker-compose.prod.yml — Environnement de pull d'image (dev ou production)
 # Usage : ENV_FILE=.env.prod docker compose -f docker-compose.prod.yml up -d
 #         ENV_FILE=.env.dev  docker compose -f docker-compose.prod.yml up -d
+#
+# No reverse proxy for now (nginx removed) — gunicorn is exposed directly on
+# the host. Re-add nginx later once there's a real domain + TLS certs and a
+# need for it (static file serving, security headers, etc).
 
 services:
   web:
     image: ghcr.io/norlik13/cesizen:${IMAGE_TAG:-latest}
     restart: unless-stopped
-    command: >
-      sh -c "python manage.py migrate --noinput &&
-             gunicorn CEZIZen.wsgi:application
-             --bind 0.0.0.0:8000 --workers 3 --timeout 120
-             --access-logfile - --error-logfile -"
-    volumes:
-      - static_volume:/app/staticfiles
+    command: sh -c "python manage.py migrate --noinput && gunicorn CEZIZen.wsgi:application --bind 127.0.0.1:8000 --workers 3 --timeout 120 --access-logfile - --error-logfile -"
     env_file:
       - ${ENV_FILE:-.env.prod}
-    expose:
-      - "8000"
-    depends_on:
-      - nginx
-
-  nginx:
-    image: nginx:1.27-alpine
-    restart: unless-stopped
     ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - static_volume:/app/staticfiles:ro
-      - ./nginx/certs:/etc/nginx/certs:ro
-    depends_on:
-      - web
-
-volumes:
-  static_volume:
+      - "8000:8000"
