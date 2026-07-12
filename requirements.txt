@@ -17,5 +17,4 @@ gunicorn==23.0.0
 coverage==7.6.1
 
 # ── Base de données MariaDB (production) ──────────────────────────────────────
-# Décommenter pour la production :
-# mysqlclient==2.2.4
+mysqlclient==2.2.4
