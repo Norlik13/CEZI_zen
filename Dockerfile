@@ -5,6 +5,8 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    default-libmysqlclient-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
@@ -19,13 +21,17 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libmariadb3 \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /install /usr/local
 COPY . .
 
 EXPOSE 8000
 
 CMD ["gunicorn", "CEZIZen.wsgi:application", \
-     "--bind", "127.0.0.1:8000", \
+     "--bind", "0.0.0.0:8000", \
      "--workers", "3", \
      "--timeout", "120", \
      "--access-logfile", "-", \
