@@ -13,12 +13,17 @@ SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]  # Obligatoire — plante si absent
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
 
 # ── HTTPS ─────────────────────────────────────────────────────────────────────
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# Off by default until a reverse proxy + real TLS certs sit in front of this
+# app again — with no proxy, forcing a redirect to https:// just hangs the
+# request since nothing is listening on 443. Set DJANGO_SECURE_SSL_REDIRECT=True
+# once that's back in place.
+_HTTPS_ENABLED = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "False") == "True"
+SECURE_SSL_REDIRECT = _HTTPS_ENABLED
+SESSION_COOKIE_SECURE = _HTTPS_ENABLED
+CSRF_COOKIE_SECURE = _HTTPS_ENABLED
+SECURE_HSTS_SECONDS = 31536000 if _HTTPS_ENABLED else 0
+SECURE_HSTS_INCLUDE_SUBDOMAINS = _HTTPS_ENABLED
+SECURE_HSTS_PRELOAD = _HTTPS_ENABLED
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # ── Base de données MariaDB ────────────────────────────────────────────────────
