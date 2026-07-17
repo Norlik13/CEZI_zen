@@ -29,7 +29,6 @@ jobs:
           IMAGE_TAG: ${{ github.event.inputs.image_tag }}
         run: |
           $ErrorActionPreference = "Stop"
-
           if ("${{ github.event.inputs.image_tag }}" -eq "latest") {
             $env:ENV_FILE = "$env:USERPROFILE\.env.dev"
             $env:COMPOSE_PROJECT_NAME = "cesizen-dev"
