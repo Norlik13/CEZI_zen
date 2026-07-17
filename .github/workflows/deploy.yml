@@ -4,11 +4,9 @@ name: Deploy
 # CD — Deploy a published image (the "make a container out of it" step).
 # Assumes the image was already built & pushed to ghcr.io by release.yml.
 #
-# There are two deploy paths below:
-#   1. deploy-server (COMMENTED OUT) — the eventual remote-server deploy over
-#      SSH, for once a real server exists. Kept as a template.
-#   2. deploy-local — runs on a self-hosted runner (your own machine), used
-#      until a server is available. See setup notes above the job.
+# dev ("latest") and prod (pinned version) are deployed with DISTINCT
+# COMPOSE_PROJECT_NAME and HOST_PORT so they can coexist on the same
+# self-hosted runner without one overwriting the other's containers/volumes.
 # ─────────────────────────────────────────────────────────────────────────────
 
 on:
@@ -20,51 +18,6 @@ on:
         default: "latest"
 
 jobs:
-  # ── Remote server deploy (disabled until a server exists) ──────────────────
-  #
-  # PREREQUISITES:
-  #   1. A reachable server with Docker + Docker Compose installed, and
-  #      docker-compose.prod.yml + nginx/ + .env.prod present at /opt/cesizen
-  #      (adjust the path below).
-  #   2. Repository secrets:
-  #        DEPLOY_HOST     - server hostname or IP
-  #        DEPLOY_USER     - SSH user
-  #        DEPLOY_SSH_KEY  - private SSH key with access to the server
-  #
-  # deploy-server:
-  #   name: Deploy to server
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Deploy over SSH
-  #       uses: appleboy/ssh-action@v1
-  #       with:
-  #         host: ${{ secrets.DEPLOY_HOST }}
-  #         username: ${{ secrets.DEPLOY_USER }}
-  #         key: ${{ secrets.DEPLOY_SSH_KEY }}
-  #         script: |
-  #           set -e
-  #           cd /opt/cesizen
-  #           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-  #           export IMAGE_TAG="${{ github.event.inputs.image_tag }}"
-  #           docker compose -f docker-compose.prod.yml --env-file .env.prod pull
-  #           docker compose -f docker-compose.prod.yml --env-file .env.prod up -d
-  #           docker image prune -f
-
-  # ── Local deploy via self-hosted runner ─────────────────────────────────────
-  #
-  # SETUP (one-time, until a real server exists):
-  #   1. GitHub repo -> Settings -> Actions -> Runners -> New self-hosted runner.
-  #   2. Follow the download/config/run instructions for your OS to register
-  #      this machine as a runner (it will sit and listen for jobs).
-  #   3. GitHub repo -> Settings -> Secrets and variables -> Actions -> New
-  #      repository secret. Create two secrets holding the FULL CONTENTS of
-  #      each env file (copy-paste the whole file as the secret value):
-  #        ENV_DEV_FILE   - contents of .env.dev  (see .env.dev.example)
-  #        ENV_PROD_FILE  - contents of .env.prod (see .env.prod.example)
-  #      The workflow writes these to disk fresh on every run — nothing to
-  #      keep in sync manually on the runner machine.
-  #   4. The ghcr.io/norlik13/cesizen package is public, so no login is needed
-  #      to pull it.
   deploy-local:
     name: Deploy locally (self-hosted)
     runs-on: self-hosted
@@ -76,17 +29,25 @@ jobs:
           IMAGE_TAG: ${{ github.event.inputs.image_tag }}
         run: |
           $ErrorActionPreference = "Stop"
+
           if ("${{ github.event.inputs.image_tag }}" -eq "latest") {
             $env:ENV_FILE = "$env:USERPROFILE\.env.dev"
+            $env:COMPOSE_PROJECT_NAME = "cesizen-dev"
+            $env:HOST_PORT = "8001"
             @'
           ${{ secrets.ENV_DEV_FILE }}
           '@ | Out-File -Encoding utf8 $env:ENV_FILE
           } else {
             $env:ENV_FILE = "$env:USERPROFILE\.env.prod"
+            $env:COMPOSE_PROJECT_NAME = "cesizen-prod"
+            $env:HOST_PORT = "8000"
             @'
           ${{ secrets.ENV_PROD_FILE }}
           '@ | Out-File -Encoding utf8 $env:ENV_FILE
           }
+
+          Write-Output "Déploiement projet=$env:COMPOSE_PROJECT_NAME port=$env:HOST_PORT env=$env:ENV_FILE"
+
           docker compose -f docker-compose.prod.yml pull
           if ($LASTEXITCODE -ne 0) { throw "docker compose pull failed" }
           docker compose -f docker-compose.prod.yml up -d
