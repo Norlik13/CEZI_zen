@@ -1,6 +1,10 @@
 # docker-compose.prod.yml — Environnement de pull d'image (dev ou production)
-# Usage : ENV_FILE=.env.prod docker compose -f docker-compose.prod.yml up -d
-#         ENV_FILE=.env.dev  docker compose -f docker-compose.prod.yml up -d
+# Usage : ENV_FILE=.env.prod COMPOSE_PROJECT_NAME=cesizen-prod HOST_PORT=8000 docker compose -f docker-compose.prod.yml up -d
+#         ENV_FILE=.env.dev  COMPOSE_PROJECT_NAME=cesizen-dev  HOST_PORT=8001 docker compose -f docker-compose.prod.yml up -d
+#
+# COMPOSE_PROJECT_NAME et HOST_PORT sont obligatoires pour que dev et prod
+# puissent tourner en parallèle sur le même hôte (runner self-hosted) sans que
+# l'un écrase les conteneurs/volumes/réseau de l'autre. Voir deploy.yml.
 #
 # No reverse proxy for now (nginx removed) — gunicorn is exposed directly on
 # the host. Re-add nginx later once there's a real domain + TLS certs and a
@@ -14,7 +18,7 @@ services:
     env_file:
       - ${ENV_FILE:-.env.prod}
     ports:
-      - "8000:8000"
+      - "${HOST_PORT:-8000}:8000"
     depends_on:
       db:
         condition: service_healthy
