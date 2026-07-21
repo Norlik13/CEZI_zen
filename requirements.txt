@@ -2,7 +2,7 @@
 
 # ── Framework principal ───────────────────────────────────────────────────────
 Django==6.0.7
-asgiref==3.11.1
+asgiref==3.12.1
 sqlparse==0.5.5
 tzdata==2025.3
 
