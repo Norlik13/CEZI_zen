@@ -1,6 +1,31 @@
 # CHANGELOG
 
 
+## v0.2.0-rc.1 (2026-07-21)
+
+### Chores
+
+- Stop tracking dev sqlite db
+  ([`4e2a95e`](https://github.com/Norlik13/CEZI_zen/commit/4e2a95e27c112bf9de84553697a0c24c03587154))
+
+### Continuous Integration
+
+- Validate prod Docker build on PRs targeting master
+  ([`3685eb3`](https://github.com/Norlik13/CEZI_zen/commit/3685eb378feecf50b6fdc7a606bb539aa2c8c9a7))
+
+Opening a PR from develop to master didn't actually build the prod image (docker-prod in release.yml
+  is gated on push to master, which only happens after merge) — this closes that gap by running a
+  push:false docker build as a PR check, catching build breakage before merge without touching GHCR
+  or semantic-release versioning.
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+
+### Features
+
+- Requirements.txt update
+  ([`9ce9fed`](https://github.com/Norlik13/CEZI_zen/commit/9ce9fed7fa16521b0730effc69170ba0a68899c1))
+
+
 ## v0.1.0 (2026-07-02)
 
 ### Continuous Integration
