@@ -1,6 +1,14 @@
 # CHANGELOG
 
 
+## v0.2.0-rc.2 (2026-07-21)
+
+### Bug Fixes
+
+- Docker compose down addition
+  ([`b6ee645`](https://github.com/Norlik13/CEZI_zen/commit/b6ee6456ce7addecac5cfae1fedd873f7b3cbf03))
+
+
 ## v0.2.0-rc.1 (2026-07-21)
 
 ### Chores
