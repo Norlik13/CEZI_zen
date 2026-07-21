@@ -4,7 +4,7 @@
 Django==6.0.7
 asgiref==3.11.1
 sqlparse==0.5.5
-tzdata==2025.3
+tzdata==2026.3
 
 # ── Fichiers statiques (production) ──────────────────────────────────────────
 whitenoise==6.9.0
