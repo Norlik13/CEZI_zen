@@ -47,6 +47,7 @@ jobs:
 
           Write-Output "Déploiement projet=$env:COMPOSE_PROJECT_NAME port=$env:HOST_PORT env=$env:ENV_FILE"
 
+          docker compose -f docker-compose.prod.yml down
           docker compose -f docker-compose.prod.yml pull
           if ($LASTEXITCODE -ne 0) { throw "docker compose pull failed" }
           docker compose -f docker-compose.prod.yml up -d
