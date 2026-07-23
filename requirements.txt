@@ -7,7 +7,7 @@ sqlparse==0.5.5
 tzdata==2025.3
 
 # ── Fichiers statiques (production) ──────────────────────────────────────────
-whitenoise==6.9.0
+whitenoise==6.12.0
 
 # ── Serveur WSGI (production) ─────────────────────────────────────────────────
 gunicorn==23.0.0
