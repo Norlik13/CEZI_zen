@@ -3,19 +3,19 @@
 version_variables = ["CEZIZen/__init__.py:__version__"]
 # Django app: nothing to build/package, so skip the build step.
 build_command = ""
-# Git tag format, e.g. v1.4.0
+# Git tag format, e.g. v1.0.0
 tag_format = "v{version}"
 # [skip ci] keeps the release commit from re-triggering the Release workflow.
 commit_message = "chore(release): {version} [skip ci]"
 # Commit the version bump + changelog back to the release branch.
 commit_author = "github-actions[bot] <github-actions[bot]@users.noreply.github.com>"
 
-# master -> final releases (1.4.0)
+# master -> final releases (1.0.0)
 [tool.semantic_release.branches.master]
 match = "master"
 prerelease = false
 
-# develop -> pre-releases (1.4.0-rc.1)
+# develop -> pre-releases (1.0.0-rc.1)
 [tool.semantic_release.branches.develop]
 match = "develop"
 prerelease = true
