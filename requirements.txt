@@ -10,7 +10,7 @@ tzdata==2025.3
 whitenoise==6.9.0
 
 # ── Serveur WSGI (production) ─────────────────────────────────────────────────
-gunicorn==23.0.0
+gunicorn==26.0.0
 
 # ── Couverture de tests (CI) ──────────────────────────────────────────────────
 coverage==7.6.1
