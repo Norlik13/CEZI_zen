@@ -1,7 +1,12 @@
 # CHANGELOG
 
 
-## v0.2.1 (2026-07-21)
+## v0.3.0-rc.1 (2026-07-23)
+
+### Features
+
+- Pyproject update for demo
+  ([`1df5c0c`](https://github.com/Norlik13/CEZI_zen/commit/1df5c0ccff13fccc191ace065b5059798709dab7))
 
 
 ## v0.2.1-rc.1 (2026-07-21)
