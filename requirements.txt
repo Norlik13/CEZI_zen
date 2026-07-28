@@ -13,7 +13,7 @@ whitenoise==6.9.0
 gunicorn==23.0.0
 
 # ── Couverture de tests (CI) ──────────────────────────────────────────────────
-coverage==7.6.1
+coverage==7.15.2
 
 # ── Base de données MariaDB (production) ──────────────────────────────────────
 mysqlclient==2.2.4
