@@ -22,7 +22,7 @@ jobs:
     name: Deploy locally (self-hosted)
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Write env file and start containers
         env:
